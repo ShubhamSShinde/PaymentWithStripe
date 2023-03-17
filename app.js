@@ -7,7 +7,16 @@ const app = express()
 var Publishable_Key = process.env.PKEY
 var Secret_Key =  process.env.SKEY
 
+
 const stripe = require('stripe')(Secret_Key) 
+
+// const stripe = require('stripe')('sk_test_51MmWOMSDNUpwLZAm1vVI5oA4IOUudh6LoKDuwg98yeIgS1KtySoZDF3czYyRipmyebN7XgMMYkbiqigLxHEGr3nq00mK3HZKBN');
+
+// const paymentIntent = await stripe.paymentIntents.create({
+//   amount: 2000,
+//   currency: 'usd',
+//   automatic_payment_methods: {enabled: true},
+// });
 
 const port = process.env.PORT || 8000 
 
@@ -42,12 +51,15 @@ app.post('/payment', function(req, res){
 	}) 
 	.then((customer) => { 
 
-		return stripe.charges.create({ 
+		return stripe.paymentIntents.create({ 
 			amount: 7000,	 
 			description: 'Web Development Product', 
-			currency: 'USD', 
+			currency: 'INR', 
+			automatic_payment_methods: {enabled: true},
+
 			customer: customer.id 
 		}); 
+		
 	}) 
 	.then((charge) => { 
 		res.send("Success") // If no error occurs 
